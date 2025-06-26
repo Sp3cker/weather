@@ -13,7 +13,7 @@ id = "15689626311a4bcd876fdef60b87999f"
 preview_id = "weather_cache_preview"
 
 # Scheduled trigger to fetch weather data every 4 hours
-[[triggers]]
+[triggers]
 crons = ["0 */4 * * *"]
 
 # Production environment

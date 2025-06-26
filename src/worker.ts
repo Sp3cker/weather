@@ -49,21 +49,39 @@ async function fetchWeatherData(env: Env): Promise<CachedWeatherData | null> {
 
     const data: WeatherAPIResponse = await response.json();
 
-    const currentTime = data.current_weather?.time;
-    const hourlyTimes = data.hourly?.time || [];
-    const index = hourlyTimes.findIndex((t) => t === currentTime);
-
     if (
-      index === -1 ||
       !data.current_weather ||
       !data.hourly?.precipitation ||
-      !data.hourly?.cloudcover
+      !data.hourly?.cloudcover ||
+      !data.hourly?.time
     ) {
-      console.error(
-        "Current time not found in hourly data or data is incomplete"
-      );
+      console.error("Weather data is incomplete");
       console.error(JSON.stringify(data, null, 2));
       return null;
+    }
+
+    const currentTime = data.current_weather.time;
+    const hourlyTimes = data.hourly.time;
+    
+    // Find the closest hour or current hour index
+    // First try to find exact match, then find the closest hour
+    let index = hourlyTimes.findIndex((t) => t === currentTime);
+    
+    if (index === -1) {
+      // If no exact match, find the closest hour (usually current hour)
+      const currentDate = new Date(currentTime);
+      const currentHour = currentDate.getUTCHours();
+      const currentDateStr = currentDate.toISOString().split('T')[0];
+      
+      // Look for the current hour on the same date
+      const targetTime = `${currentDateStr}T${currentHour.toString().padStart(2, '0')}:00`;
+      index = hourlyTimes.findIndex((t) => t === targetTime);
+      
+      // If still not found, use the first available hour (fallback)
+      if (index === -1) {
+        console.log(`No exact time match found. Using first available hour. Current: ${currentTime}, Available: ${hourlyTimes.slice(0, 3)}`);
+        index = 0;
+      }
     }
 
     const precipitation = data.hourly.precipitation[index];
