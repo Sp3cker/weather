@@ -1,0 +1,23 @@
+name = "weather-worker"
+main = "src/worker.ts"
+compatibility_date = "2024-12-18"
+
+# Environment variables
+[vars]
+API_URL = "https://api.open-meteo.com/v1/forecast"
+
+# KV namespace for caching weather data
+[[kv_namespaces]]
+binding = "WEATHER_CACHE"
+id = "weather_cache_namespace"
+preview_id = "weather_cache_preview"
+
+# Scheduled trigger to fetch weather data every 4 hours
+[[triggers]]
+crons = ["0 */4 * * *"]
+
+# Production environment
+[env.production]
+[[env.production.kv_namespaces]]
+binding = "WEATHER_CACHE"
+id = "weather_cache_production"
