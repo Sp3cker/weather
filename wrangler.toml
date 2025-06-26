@@ -24,4 +24,4 @@ id = "weather_cache_production"
 
 
 [observability.logs]
-enabled = false
+enabled = true
