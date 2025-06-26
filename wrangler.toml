@@ -1,4 +1,4 @@
-name = "weather-worker"
+name = 'yellow-sunset-856b'
 main = "src/worker.ts"
 compatibility_date = "2024-12-18"
 
@@ -9,7 +9,7 @@ API_URL = "https://api.open-meteo.com/v1/forecast"
 # KV namespace for caching weather data
 [[kv_namespaces]]
 binding = "WEATHER_CACHE"
-id = "weather_cache_namespace"
+id = "15689626311a4bcd876fdef60b87999f"
 preview_id = "weather_cache_preview"
 
 # Scheduled trigger to fetch weather data every 4 hours
@@ -21,3 +21,7 @@ crons = ["0 */4 * * *"]
 [[env.production.kv_namespaces]]
 binding = "WEATHER_CACHE"
 id = "weather_cache_production"
+
+
+[observability.logs]
+enabled = false
